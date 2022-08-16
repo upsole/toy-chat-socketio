@@ -34,21 +34,7 @@ function App() {
   const [inputVal, setInputVal] = useState("");
   const [socket, setSocket] = useState<Socket>();
 
-  // useEffect(() => {
-  //   if (messages.length < 1) {
-  //     return;
-  //   }
-  //   let timer = setInterval(() => {
-  //     console.log("Timer called");
-  //     const arr = messages.splice(1, 1);
-  //     setMessages(arr);
-  //   }, 2000);
-  //   return () => clearInterval(timer);
-  // });
-
   useEffect(() => {
-    // useEffect triggers twice thanks to StrictMode in dev. So I use the useEffect
-    // callback to close connection imperatively on unmount
     if (user) {
       let sckt = io("http://localhost:5040/");
       sckt.emit("connection", { user });
@@ -87,9 +73,6 @@ function App() {
     socket.on("chat message", (msg) => {
       setMessages([...messages, msg]);
     });
-    socket.on("disconnect", () => {
-      socket.emit("")
-    })
   }
 
   return (

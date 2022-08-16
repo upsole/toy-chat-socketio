@@ -109,9 +109,26 @@ form > button {
   margin: .25em;
 }
 
+@media (max-width: 720px) {
+  .login_container {
+    margin: 0;
+    width: auto;
+  }
+
+  .logoff {
+    padding: 1em;
+  }
+
+  .logoff button{
+    /* height: 50%; */
+    font-size: .9rem;
+  }
+}
+
 .logoff {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .logoff * {
