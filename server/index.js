@@ -8,24 +8,27 @@ const main = () => {
   app.use(cors());
   const server = createServer(app);
 
-  const io = new Server(server, {cors: "*"});
+  const io = new Server(server, { cors: "*" });
 
   app.get("/ok", (_, res) => {
     res.status(200).send("Server is running");
   });
 
   io.on("connection", (socket) => {
-    console.log("user connected");
-
+    socket.on("connection", ({ user }) => console.log(user, "connected. Room -", socket.rooms));
     socket.on("chat message", (msg) => {
-      console.log("chat message", (msg));
+      console.log("chat message", msg);
 
-      io.emit('chat message', msg);
+      io.emit("chat message", msg);
     });
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
+    socket.on("disconnecting", (_) => {
+      console.log("Room closed -", socket.rooms);
     });
+
+    // socket.on("disconnect", (socket) => {
+    //   console.log(socket, "- user disconnected");
+    // });
   });
 
   const port = 5040;

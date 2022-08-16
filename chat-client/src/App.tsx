@@ -47,9 +47,13 @@ function App() {
   // });
 
   useEffect(() => {
+    // useEffect triggers twice thanks to StrictMode in dev. So I use the useEffect
+    // callback to close connection imperatively on unmount
     if (user) {
       let sckt = io("http://localhost:5040/");
+      sckt.emit("connection", { user });
       setSocket(sckt);
+      return () => sckt.disconnect() as any;
     }
   }, [user]);
 
@@ -83,12 +87,17 @@ function App() {
     socket.on("chat message", (msg) => {
       setMessages([...messages, msg]);
     });
+    socket.on("disconnect", () => {
+      socket.emit("")
+    })
   }
 
   return (
     <main>
       <div className={styles.logoff}>
-        <h5>Logged in as <span>{user}</span></h5>
+        <h5>
+          Logged in as <span>{user}</span>
+        </h5>
         <button
           onClick={() => {
             localStorage.removeItem("username");
