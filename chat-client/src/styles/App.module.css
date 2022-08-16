@@ -71,7 +71,7 @@ form > button:hover {
   display: flex;
   padding: .5em;
 
-  animation-duration: .5s;
+  animation-duration: .25s;
   animation-name: pop;
 }
 

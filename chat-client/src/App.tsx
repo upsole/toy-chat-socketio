@@ -23,6 +23,29 @@ function App() {
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
+    if (messages.length < 1) {return}
+    let timer = setTimeout(() => {
+      console.log("Timer called");
+      const arr = messages.splice(1, 1);
+      setMessages(arr);
+    }, 5000);
+    return () => clearTimeout(timer)
+  }, [messages]);
+
+  // useEffect(() => {
+  //   if (messages.length > 0) {
+  //     let interval = setInterval(() => {
+  //       const arr = messages.splice(0, 1)
+  //       console.log(arr);
+  //       setMessages(arr)
+  //     }, 25)
+  //     return () => clearInterval(interval)
+  //   } else {
+  //     return
+  //   }
+  // }, [])
+
+  useEffect(() => {
     if (user) {
       let sckt = io("http://localhost:5040/");
       setSocket(sckt);
