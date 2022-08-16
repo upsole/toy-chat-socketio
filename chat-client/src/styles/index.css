@@ -52,6 +52,7 @@ button {
 }
 button:hover {
   border-color: var(--clr-highlight);
+  color: var(--clr-highlight);
 }
 button:focus,
 button:focus-visible {

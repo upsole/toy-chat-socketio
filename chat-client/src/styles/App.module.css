@@ -52,15 +52,13 @@ form > button {
   font-size: .8rem;
 }
 
-form > button:hover {
-  color: var(--clr-highlight);
-}
-
 .messages {
   width: 75vw;
-  border-top: 1.8px solid hsla(0, 0%, 100%, .45);
-  margin-top: 1em;
-  transition: border-color 1s;
+  border-top: 2.5px solid hsla(0, 0%, 100%, .45);
+  transition: border-color .65s;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.320, 1);
+  max-height: 70vh;
+  overflow-y: scroll;
 }
 
 .messages span {
@@ -109,4 +107,22 @@ form > button:hover {
 
 .login_form > * {
   margin: .25em;
+}
+
+.logoff {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logoff * {
+  margin: 0;
+}
+
+.logoff button {
+  border-radius: 8px;
+}
+
+
+.logoff span {
+  color: var(--clr-highlight)
 }

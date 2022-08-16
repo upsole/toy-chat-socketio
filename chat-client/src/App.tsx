@@ -1,11 +1,23 @@
 import styles from "./styles/App.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
 const Messages: React.FC<{ children: React.ReactNode[] }> = ({ children }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // ref is undefined before first render
+    // children as dependency makes sure it will reapply after every msg
+    if (divRef.current) {
+      divRef.current.scrollTop = divRef.current?.scrollHeight;
+    }
+  }, [children]);
+
   if (children.length > 0) {
     return (
-      <div className={`${styles.messages} ${styles.highlight}`}>{children}</div>
+      <div className={`${styles.messages} ${styles.highlight}`} ref={divRef}>
+        {children}
+      </div>
     );
   }
   return <div className={`${styles.messages}`}></div>;
@@ -17,33 +29,22 @@ type ChatMsg = {
 };
 
 function App() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(localStorage.getItem("username") || "");
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [inputVal, setInputVal] = useState("");
   const [socket, setSocket] = useState<Socket>();
 
-  useEffect(() => {
-    if (messages.length < 1) {return}
-    let timer = setTimeout(() => {
-      console.log("Timer called");
-      const arr = messages.splice(1, 1);
-      setMessages(arr);
-    }, 5000);
-    return () => clearTimeout(timer)
-  }, [messages]);
-
   // useEffect(() => {
-  //   if (messages.length > 0) {
-  //     let interval = setInterval(() => {
-  //       const arr = messages.splice(0, 1)
-  //       console.log(arr);
-  //       setMessages(arr)
-  //     }, 25)
-  //     return () => clearInterval(interval)
-  //   } else {
-  //     return
+  //   if (messages.length < 1) {
+  //     return;
   //   }
-  // }, [])
+  //   let timer = setInterval(() => {
+  //     console.log("Timer called");
+  //     const arr = messages.splice(1, 1);
+  //     setMessages(arr);
+  //   }, 2000);
+  //   return () => clearInterval(timer);
+  // });
 
   useEffect(() => {
     if (user) {
@@ -61,6 +62,7 @@ function App() {
           onSubmit={(e) => {
             e.preventDefault();
             if (inputVal) {
+              localStorage.setItem("username", inputVal);
               setUser(inputVal);
               setInputVal("");
             }
@@ -70,7 +72,7 @@ function App() {
           <input
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Type your username"
+            placeholder="Choose your username"
           />
         </form>
       </div>
@@ -85,6 +87,17 @@ function App() {
 
   return (
     <main>
+      <div className={styles.logoff}>
+        <h5>Logged in as <span>{user}</span></h5>
+        <button
+          onClick={() => {
+            localStorage.removeItem("username");
+            setUser("");
+          }}
+        >
+          Log off
+        </button>
+      </div>
       <form
         action=""
         className={styles.chat_input}
